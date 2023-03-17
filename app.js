@@ -1,7 +1,7 @@
-const http = require('http');
-const url = require('url');
 const querystring = require('querystring');
-const port = 3000;
+const url = require('url');
+const express = require('express');
+const app = express();
 
 const users = [
     {id: 1, fullName: 'Ivan Ivanov', age: 17, type: 'student'},
@@ -15,30 +15,11 @@ const users = [
     {id: 9, fullName: 'Pavel Petrov', age: 21, type: 'trainee'},
 ];
 
-http.createServer((req, res) => {
-    let parsedUrl = url.parse(req.url);
-
-    //TODO: Make normal routing using express lib
-    if (parsedUrl.pathname === '/users') {
-        let params = querystring.parse(parsedUrl.query)
-        let data = filterArray(params);
-
-        if (data.length > 0) {
-            res.write('Found ' + data.length + ' users: ' + JSON.stringify(data));
-        } else {
-            res.write('User data is missing or does not match the search and filter criteria');
-        }
-
-        res.end();
-    } else {
-        res.write('Hello, World!')
-        res.end();
-    }
-}).listen(port)
-
+/*
+Apply filters from request to data array
+ */
 function filterArray(filters) {
     let data = [...users];
-    //TODO refactor maybe
     if (filters.fullName) {
         data = data.filter(user => user.fullName === filters.fullName);
     }
@@ -55,9 +36,36 @@ function filterArray(filters) {
         data = data.filter(user => user.type === filters.type)
     }
 
+    /*
+    Negative or zero limit doesn't make sense, so I added additional condition limit > 0
+     */
     if (filters.limit && filters.limit > 0) {
         data = data.slice(0, filters.limit)
     }
 
     return data;
 }
+
+/*
+Routing using express.js lib
+ */
+
+app.get('/users', (req, res) => {
+    let params = querystring.parse(url.parse(req.url).query)
+    let data = filterArray(params);
+
+    if (data.length > 0) {
+        res.write('Found ' + data.length + ' users: ' + JSON.stringify(data));
+    } else {
+        res.write('User data is missing or does not match the search and filter criteria');
+    }
+
+    res.send();
+})
+
+app.get('/', (req, res) => {
+    res.write('Hello and welcome to homepage!');
+    res.send();
+})
+
+app.listen(3000);
