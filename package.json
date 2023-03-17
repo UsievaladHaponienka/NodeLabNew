@@ -1,0 +1,19 @@
+{
+  "name": "nodelab-usievalad-haponienka",
+  "version": "1.0.0",
+  "description": "Node JS Study project by Usievalad Haponienka",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UsievaladHaponienka/NodeLab.git"
+  },
+  "author": "Usievalad Haponienka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UsievaladHaponienka/NodeLab/issues"
+  },
+  "homepage": "https://github.com/UsievaladHaponienka/NodeLab#readme"
+}
