@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/UsievaladHaponienka/NodeLab/issues"
   },
-  "homepage": "https://github.com/UsievaladHaponienka/NodeLab#readme"
+  "homepage": "https://github.com/UsievaladHaponienka/NodeLab#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
