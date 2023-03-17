@@ -23,8 +23,12 @@ http.createServer((req, res) => {
         let params = querystring.parse(parsedUrl.query)
         let data = filterArray(params);
 
+        if (data.length > 0) {
+            res.write('Found ' + data.length + ' users: ' + JSON.stringify(data));
+        } else {
+            res.write('User data is missing or does not match the search and filter criteria');
+        }
 
-        res.write('Users: ' + JSON.stringify(data));
         res.end();
     } else {
         res.write('Hello, World!')
@@ -34,7 +38,7 @@ http.createServer((req, res) => {
 
 function filterArray(filters) {
     let data = [...users];
-    //TODO refactor
+    //TODO refactor maybe
     if (filters.fullName) {
         data = data.filter(user => user.fullName === filters.fullName);
     }
@@ -51,7 +55,7 @@ function filterArray(filters) {
         data = data.filter(user => user.type === filters.type)
     }
 
-    if (filters.limit) {
+    if (filters.limit && filters.limit > 0) {
         data = data.slice(0, filters.limit)
     }
 
