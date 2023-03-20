@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+/*
+Should be moved to other file
+ */
 const users = [
     {id: 1, fullName: 'Ivan Ivanov', age: 17, type: 'student'},
     {id: 2, fullName: 'Aleksey Aleksandrovich', age: 44, type: 'developer'},
@@ -44,6 +47,10 @@ router.get('/', (req, res) => {
     }
 
     if (!data.length) {
+        /*
+        `res.send()` doesn't terminate app, next lines will be executed even after method call.
+        So here we need to do `return res.send()` in order to avoid sending response for the second time.
+         */
         return res.send('User data is missing or does not match the search and filter criteria');
     }
 
