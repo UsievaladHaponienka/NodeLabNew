@@ -1,5 +1,3 @@
-const querystring = require('querystring');
-const url = require('url');
 const express = require('express');
 const app = express();
 
@@ -15,52 +13,41 @@ const users = [
     {id: 9, fullName: 'Pavel Petrov', age: 21, type: 'trainee'},
 ];
 
-/*
-Apply filters from request to data array
- */
-function filterArray(filters) {
+app.get('/users', (req, res) => {
     let data = [...users];
-    if (filters.fullName) {
-        data = data.filter(user => user.fullName === filters.fullName);
+
+    /*
+    "Filtering" should be terminated if data.length = 0.
+     It doesn't have a lot of sense while filters are so simple, but anyway.
+     */
+    if (req.query.fullName) {
+        data = data.filter(user => user.fullName === req.query.fullName);
     }
 
     if (filters.maxAge) {
-        data = data.filter(user => user.age <= filters.maxAge)
+        data = data.filter(user => user.age <= req.query.maxAge)
     }
 
-    if (filters.minAge) {
-        data = data.filter(user => user.age >= filters.minAge)
+    if (req.query.minAge) {
+        data = data.filter(user => user.age >= req.query.minAge)
     }
 
-    if (filters.type) {
-        data = data.filter(user => user.type === filters.type)
+    if (req.query.type) {
+        data = data.filter(user => user.type === req.query.type)
     }
 
     /*
     Negative or zero limit doesn't make sense, so I added additional condition limit > 0
      */
-    if (filters.limit && filters.limit > 0) {
-        data = data.slice(0, filters.limit)
+    if (req.query.limit && req.query.limit > 0) {
+        data = data.slice(0, req.query.limit)
     }
 
-    return data;
-}
-
-/*
-Routing using express.js lib
- */
-
-app.get('/users', (req, res) => {
-    let params = querystring.parse(url.parse(req.url).query)
-    let data = filterArray(params);
-
-    if (data.length > 0) {
-        res.write('Found ' + data.length + ' users: ' + JSON.stringify(data));
-    } else {
-        res.write('User data is missing or does not match the search and filter criteria');
+    if (!data.length) {
+        return res.send('User data is missing or does not match the search and filter criteria');
     }
 
-    res.send();
+    res.send('Found ' + data.length + ' users: ' + JSON.stringify(data));
 })
 
 app.get('/', (req, res) => {
