@@ -18,7 +18,7 @@ Simple project with for todo management.
  - Update existent Todo (you need to provide title and/or description in request body).
  - Delete Todo by id.
 
-If requested TODO is not found, corresponding method should be displayed in response.
+If requested TODO is not found, corresponding error message should be displayed in response.
 
 #### Example of body params array to pass in create/update request:
 ```json
