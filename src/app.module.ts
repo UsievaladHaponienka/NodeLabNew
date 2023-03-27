@@ -15,17 +15,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         type: 'postgres',
         host: configService.get('DB_HOST'),
         port: configService.get('DB_PORT'),
-        username: 'node',
+        username: configService.get('DB_USER'),
         password: 'pass',
         database: 'nodelab_lesson_2',
-        entities: [__dirname + '/**/**/*.entity{.ts,.js'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        migrations: [],
-        migrationsTableName: 'custom_migration_table',
       }),
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}
