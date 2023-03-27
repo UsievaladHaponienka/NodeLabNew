@@ -15,9 +15,8 @@ export class TodoService {
     return await this.todoRepository.find();
   }
 
-  async getTodo(id: number): Promise<TodoInterface | string> {
-    const Todo = await this.todoRepository.findOne({ where: { id } });
-    return Todo ? Todo : 'Not found';
+  async getTodo(id: number): Promise<TodoInterface> {
+    return await this.todoRepository.findOne({ where: { id } });
   }
 
   async createTodo(todo: TodoInterface): Promise<TodoInterface> {
@@ -29,10 +28,7 @@ export class TodoService {
     return await this.todoRepository.save(Todo);
   }
 
-  async updateTodo(
-    id: number,
-    todo: TodoInterface,
-  ): Promise<TodoInterface | string> {
+  async updateTodo(id: number, todo: TodoInterface): Promise<TodoInterface> {
     const TodoEntity = await this.todoRepository.findOne({ where: { id } });
     if (TodoEntity) {
       await this.todoRepository.update(
@@ -47,17 +43,13 @@ export class TodoService {
 
       return this.todoRepository.findOne({ where: { id: id } });
     }
-
-    return 'Not found';
   }
 
-  async deleteTodo(id: number): Promise<TodoInterface | string> {
+  async deleteTodo(id: number): Promise<TodoInterface> {
     const TodoEntity = this.todoRepository.findOne({ where: { id } });
     if (TodoEntity) {
       await this.todoRepository.delete({ id: id });
       return TodoEntity;
     }
-
-    return 'Not found';
   }
 }

@@ -6,6 +6,8 @@ import {
   Delete,
   Param,
   Body,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { TodoInterface } from './interface/todo.interface';
@@ -15,14 +17,19 @@ export class TodoController {
   constructor(private service: TodoService) {}
 
   @Get()
-  async getAllTodos(): Promise<TodoInterface[] | string> {
+  async getAllTodos(): Promise<TodoInterface[]> {
     return this.service.getAllTodos();
   }
 
   @Get(':id')
-  async getTodo(@Param() params): Promise<TodoInterface | string> {
+  async getTodo(@Param() params): Promise<TodoInterface> {
     const id = params.id;
-    return this.service.getTodo(id);
+    const Todo = await this.service.getTodo(id);
+
+    if (Todo) {
+      return Todo;
+    }
+    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 
   @Post()
@@ -34,13 +41,23 @@ export class TodoController {
   async updateTodo(
     @Param() params,
     @Body() todo: TodoInterface,
-  ): Promise<TodoInterface | string> {
+  ): Promise<TodoInterface> {
     const id = params.id;
-    return this.service.updateTodo(id, todo);
+    const Todo = await this.service.updateTodo(id, todo);
+
+    if (Todo) {
+      return Todo;
+    }
+    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 
   @Delete(':id')
-  async deleteTodo(@Param() params): Promise<TodoInterface | string> {
-    return this.service.deleteTodo(params.id);
+  async deleteTodo(@Param() params): Promise<TodoInterface> {
+    const Todo = await this.service.deleteTodo(params.id);
+
+    if (Todo) {
+      return Todo;
+    }
+    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 }
