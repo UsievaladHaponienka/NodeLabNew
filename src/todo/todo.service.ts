@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
+export interface Todo {
+  id?: number;
+  title: string;
+  description: string;
+}
+
 @Injectable()
 export class TodoService {
   getAllTodos(): string {

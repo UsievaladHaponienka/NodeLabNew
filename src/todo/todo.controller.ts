@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
@@ -6,27 +14,27 @@ export class TodoController {
   constructor(private service: TodoService) {}
 
   @Get()
-  getAllTodos(): string {
+  async getAllTodos() {
     return this.service.getAllTodos();
   }
 
   @Get(':id')
-  getTodo(@Param() params): string {
+  async getTodo(@Param() params) {
     return this.service.getTodo(params.id);
   }
 
   @Post()
-  createTodo(@Param() params): string {
+  async createTodo(@Body() params) {
     return this.service.createTodo(params);
   }
 
   @Put()
-  updateTodo(@Param() params): string {
+  async updateTodo(@Body() params) {
     return this.service.updateTodo(params);
   }
 
   @Delete(':id')
-  deleteTodo(@Param() params): string {
+  async deleteTodo(@Param() params) {
     return this.service.deleteTodo(params.id);
   }
 }
