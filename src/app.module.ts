@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         type: 'postgres',
         host: configService.get('DB_HOST'),
         port: configService.get('DB_PORT'),
-        username: configService.get('DB_USER'),
+        username: 'node',
         password: 'pass',
         database: 'nodelab_lesson_2',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
@@ -26,5 +26,4 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {}
