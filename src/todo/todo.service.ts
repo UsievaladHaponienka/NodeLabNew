@@ -2,12 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Todo } from './todo.entity';
-
-export interface TodoInterface {
-  id?: number;
-  title: string;
-  description: string;
-}
+import { TodoInterface } from './interface/todo.interface';
 
 @Injectable()
 export class TodoService {
@@ -20,8 +15,9 @@ export class TodoService {
     return await this.todoRepository.find();
   }
 
-  async getTodo(id: number): Promise<TodoInterface> {
-    return await this.todoRepository.findOne({ where: { id } });
+  async getTodo(id: number): Promise<TodoInterface | string> {
+    const Todo = await this.todoRepository.findOne({ where: { id } });
+    return Todo ? Todo : 'Not found';
   }
 
   async createTodo(todo: TodoInterface): Promise<TodoInterface> {
@@ -29,24 +25,39 @@ export class TodoService {
       title: todo.title,
       description: todo.description,
     });
+
     return await this.todoRepository.save(Todo);
   }
 
-  async updateTodo(id: number, todo: TodoInterface): Promise<TodoInterface> {
-    await this.todoRepository.update(
-      { id: id },
-      {
-        title: todo.title,
-        description: todo.description,
-      },
-    );
+  async updateTodo(
+    id: number,
+    todo: TodoInterface,
+  ): Promise<TodoInterface | string> {
+    const TodoEntity = await this.todoRepository.findOne({ where: { id } });
+    if (TodoEntity) {
+      await this.todoRepository.update(
+        { id: id },
+        {
+          title: todo.title ? todo.title : TodoEntity.title,
+          description: todo.description
+            ? todo.description
+            : TodoEntity.description,
+        },
+      );
 
-    return this.getTodo(id);
+      return this.todoRepository.findOne({ where: { id: id } });
+    }
+
+    return 'Not found';
   }
 
-  async deleteTodo(id: number): Promise<TodoInterface> {
-    const Todo = this.todoRepository.findOne({ where: { id } });
-    await this.todoRepository.delete({ id: id });
-    return Todo;
+  async deleteTodo(id: number): Promise<TodoInterface | string> {
+    const TodoEntity = this.todoRepository.findOne({ where: { id } });
+    if (TodoEntity) {
+      await this.todoRepository.delete({ id: id });
+      return TodoEntity;
+    }
+
+    return 'Not found';
   }
 }
