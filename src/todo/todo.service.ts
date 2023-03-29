@@ -34,10 +34,8 @@ export class TodoService {
       await this.todoRepository.update(
         { id: id },
         {
-          title: todo.title ? todo.title : TodoEntity.title,
-          description: todo.description
-            ? todo.description
-            : TodoEntity.description,
+          title: todo.title,
+          description: todo.description,
         },
       );
 
